@@ -175,6 +175,12 @@ socket.on("USER_ELIMINATED", console.log);
 socket.on("WINNER_DECLARED", console.log);
 ```
 
+## 📸 Screenshots
+Screenshots of API testing, WebSocket events, and database state are available in the `/screenshots` folder.
+
+## 🧠 Architecture & Design
+High-level architecture and design decisions are documented in the `/docs` folder.
+
 ## 🧠 Key Design Decisions
 
 - Prisma transactions for atomic operations
