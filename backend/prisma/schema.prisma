@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  coins        Int
+  participants Participant[]
+}
+
+model SpinWheel {
+  id           Int           @id @default(autoincrement())
+  status       String
+  winnerPool   Int
+  adminPool    Int
+  appPool      Int
+  participants Participant[]
+}
+
+model Participant {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  spinWheelId Int
+  eliminated  Boolean @default(false)
+
+  user      User      @relation(fields: [userId], references: [id])
+  spinWheel SpinWheel @relation(fields: [spinWheelId], references: [id])
+}
