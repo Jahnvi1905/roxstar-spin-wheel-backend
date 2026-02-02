@@ -11,6 +11,8 @@ export class SpinWheelService {
 
   // 1️⃣ CREATE SPIN WHEEL (ONLY ONE ACTIVE)
   async createWheel() {
+    console.log('🟢 createWheel() API HIT');
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const activeWheel = await this.prisma.spinWheel.findFirst({
       where: { status: 'WAITING' },
@@ -33,6 +35,7 @@ export class SpinWheelService {
 
   // 2️⃣ JOIN SPIN WHEEL (COINS + POOLS)
   joinWheel(userId: number) {
+    console.log('🟡 joinWheel() API HIT | user:', userId);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return this.prisma.$transaction(
       async (tx: {
@@ -120,6 +123,7 @@ export class SpinWheelService {
 
   // 3️⃣ START SPIN WHEEL (MIN 3 USERS)
   async startWheel() {
+    console.log('🔵 startWheel() API HIT');
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const wheel = await this.prisma.spinWheel.findFirst({
       where: { status: 'WAITING' },
