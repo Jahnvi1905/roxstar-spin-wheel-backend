@@ -16,6 +16,7 @@ It implements a Spin Wheel game where multiple users can join, get eliminated in
 - Real-time multiplayer updates using WebSockets
 - Winner declaration and payout
 - Clean, scalable architecture
+- Real-time UI updates using Socket.IO (no polling)
 
 ---
 
@@ -41,6 +42,7 @@ It implements a Spin Wheel game where multiple users can join, get eliminated in
 - Minimum 3 participants required
 - Automatic elimination every 7 seconds
 - Last remaining user wins
+
 
 ### Coin Distribution
 - Entry fee split into:
