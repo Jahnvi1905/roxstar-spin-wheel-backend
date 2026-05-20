@@ -1,0 +1,22 @@
+services:
+  # NestJS Backend Web Service
+  - type: web
+    name: roxstar-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm run start:prod
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: roxstar-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: "*" # Allows connections from any origin initially, user can restrict it later
+      - key: PORT
+        value: 10000
+
+databases:
+  - name: roxstar-db
+    plan: free
