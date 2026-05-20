@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "./api";
-import { io } from "socket.io-client";
+import { socket } from "./socket";
 import "./App.css";
-
-const socket = io("http://localhost:3000", {
-  transports: ["websocket"],
-});
 
 function App() {
   const [logs, setLogs] = useState([]);
@@ -30,11 +26,12 @@ function App() {
     });
 
     socket.on("WINNER_DECLARED", (data) => {
-  setLogs((prev) => [
-    ...prev,
-    `🏆 Winner: User ${data.userId} won ${data.amount} coins`,
-  ]);
-});
+      setLogs((prev) => [
+        ...prev,
+        `🏆 Winner: User ${data.userId} won ${data.amount} coins`,
+      ]);
+      setWinner(data.userId);
+    });
 
 
     return () => {
@@ -72,8 +69,7 @@ function App() {
   return (
     <div className="container">
       <h1>🎡 RoxStar Spin Wheel</h1>
-      <p className="status">Backend: http://localhost:3000</p>
-      <p className="status">Frontend: http://localhost:3002</p>
+      <p className="status">Backend: {API_BASE_URL}</p>
 
       <button onClick={createWheel}>Create Spin Wheel</button>
 
