@@ -38,36 +38,21 @@ export class SpinWheelService {
     console.log('🟡 joinWheel() API HIT | user:', userId);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return this.prisma.$transaction(
-      async (tx: {
-        user: {
-          findUnique: (arg0: { where: { id: number } }) => any;
-          update: (arg0: {
-            where: { id: number };
-            data: { coins: { decrement: number } };
-          }) => any;
-        };
-        spinWheel: {
-          findFirst: (arg0: { where: { status: string } }) => any;
-          update: (arg0: {
-            where: { id: any };
-            data: {
-              winnerPool: { increment: number };
-              adminPool: { increment: number };
-              appPool: { increment: number };
-            };
-          }) => any;
-        };
-        participant: {
-          create: (arg0: { data: { userId: number; spinWheelId: any } }) => any;
-        };
-      }) => {
+      async (tx: any) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const user = await tx.user.findUnique({
+        let user = await tx.user.findUnique({
           where: { id: userId },
         });
 
+        // 🌟 SELF-HEALING: If user doesn't exist in fresh DB, auto-create with 100 coins
         if (!user) {
-          return { error: 'User not found' };
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          user = await tx.user.create({
+            data: {
+              id: userId,
+              coins: 100,
+            },
+          });
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -84,10 +69,9 @@ export class SpinWheelService {
           return { error: 'No active spin wheel' };
         }
 
-        // deduct coins
+        // deduct coins from the correct user (fixed bug: changed wheel.id to userId)
         await tx.user.update({
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          where: { id: wheel.id },
+          where: { id: userId },
           data: {
             coins: { decrement: 10 },
           },
